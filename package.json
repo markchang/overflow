@@ -14,7 +14,6 @@
     "moment": "^2.6.0",
     "morgan": "~1.0.0",
     "redis-url": "^0.2.0",
-    "static-favicon": "~1.0.0",
     "twilio": "^1.6.0"
   }
 }

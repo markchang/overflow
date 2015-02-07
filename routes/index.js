@@ -8,21 +8,19 @@ var moment = require('moment');
 /* GET home page. */
 router.get('/', function(req, res) {
   // get current bacon status
-  redis.lrange("status", "0", "-1", function(err, values) {
-    var updates = [];
-    values.forEach(function(value, i) {
-      update = JSON.parse(value);
-      update.pretty_date = moment(update.date).fromNow();
-      updates.push(update);
-    })
-    res.render('index', { title: 'Bacon Status', 
-                          updates: updates,
-                        });
-  })
-});
+  // redis.lrange("status", "0", "-1", function(err, values) {
+  //   var updates = [];
+  //   values.forEach(function(value, i) {
+  //     update = JSON.parse(value);
+  //     update.pretty_date = moment(update.date).fromNow();
+  //     updates.push(update);
+  //   })
+  //   res.render('index', { title: 'Bacon Status', 
+  //                         updates: updates,
+  //                       });
+  // })
 
-router.get('/about', function(req, res) {
-  res.render('about', { title: 'About Bacon Status'});
+  res.render('index');
 });
 
 router.post('/sms_test', function(req,res) {
@@ -59,13 +57,13 @@ router.post('/sms', function(req, res) {
       redis.sadd("kir", from, function(err, values) {
         if(!err) {
           console.log("Added " + from + " to user database");
-          bacon_status = {date: new Date(), status: body};
-          redis.lpush("status", JSON.stringify(bacon_status), function(err, values) {
+          overflow_status = {date: new Date(), status: body};
+          redis.lpush("status", JSON.stringify(overflow_status), function(err, values) {
             if(!err) {
               broadcast(from, body);
 
               var twiml_resp = new twilio.TwimlResponse();
-              twiml_resp.message('Welcome to the club. Text me the current bacon status and I\'ll broadcast it to everyone and update the web page. Say "bye" to quit.');
+              twiml_resp.message('Hi. Text me if KIR overflow parking has started and I\'ll tell everyone else. Say "bye" to quit.');
               console.log(twiml_resp.toString());
               res.send(twiml_resp.toString());
             } else {
@@ -88,7 +86,7 @@ router.post('/sms', function(req, res) {
           if(!err) {
             console.log("Removing " + from);
             var twiml_resp = new twilio.TwimlResponse();
-            twiml_resp.message('Fine. More bacon for us.');
+            twiml_resp.message('Got it. No more texts from us!');
             console.log(twiml_resp.toString());
             res.send(twiml_resp.toString());
           } else {
@@ -114,13 +112,13 @@ router.post('/sms', function(req, res) {
 
       // status update
       else {
-        console.log("Logging bacon status: " + body);
-        bacon_status = {date: new Date(), status: body};
-        redis.lpush("status", JSON.stringify(bacon_status), function(err, values) {
+        console.log("Logging overflow status: " + body);
+        overflow_status = {date: new Date(), status: body};
+        redis.lpush("status", JSON.stringify(overflow_status), function(err, values) {
           if(!err) {
             broadcast(from, body);
             var twiml_resp = new twilio.TwimlResponse();
-            twiml_resp.message('Oink! Thanks for keeping the bacon status fresh.');
+            twiml_resp.message('Thanks for the update.');
             console.log(twiml_resp.toString());
             res.send(twiml_resp.toString());                
           } else {
@@ -150,7 +148,7 @@ function broadcast(from, status) {
 function say(to, body) {
   client.sendSms({
       to: to,
-      from: '12065382935',
+      from: '15092288394',
       body: body
   }, function(error, message) {
       if (!error) {
