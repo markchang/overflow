@@ -99,12 +99,15 @@ router.post('/sms', function(req, res) {
 
       // get current status
       else if(body.toLowerCase()=="status") {
+        console.log("Requesting status from " + from);
         redis.lrange("status", "0", "0", function(err, values) {
           // really assume one here, but let's put it into a loop, right? ugly!
           values.forEach(function(value, i) {
             status = JSON.parse(value);
             status.pretty_date = moment(status.date).fromNow();
             var twiml_resp = new twilio.TwimlResponse();
+
+            console.log("Sending status to " + from + " : " + status.status);
             twiml_resp.message(status.status + '(' + status.pretty_date + ')');
             res.send(twiml_resp.toString());
           })
