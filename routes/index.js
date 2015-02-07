@@ -60,10 +60,11 @@ router.post('/sms', function(req, res) {
           overflow_status = {date: new Date(), status: body};
           redis.lpush("status", JSON.stringify(overflow_status), function(err, values) {
             if(!err) {
-              broadcast(from, body);
+              // don't broadcast the signup flow
+              // broadcast(from, body);
 
               var twiml_resp = new twilio.TwimlResponse();
-              twiml_resp.message('Hi. Text me if KIR overflow parking has started and I\'ll tell everyone else. Say "bye" to quit.');
+              twiml_resp.message('Hi. Tell me when KIR overflow starts and I\'ll tell everyone else. Say "status" for the latest update. "Bye" to quit.');
               console.log(twiml_resp.toString());
               res.send(twiml_resp.toString());
             } else {
@@ -86,7 +87,7 @@ router.post('/sms', function(req, res) {
           if(!err) {
             console.log("Removing " + from);
             var twiml_resp = new twilio.TwimlResponse();
-            twiml_resp.message('Got it. No more texts from us!');
+            twiml_resp.message('Got it. We won\'t text you anymore.');
             console.log(twiml_resp.toString());
             res.send(twiml_resp.toString());
           } else {
@@ -118,7 +119,7 @@ router.post('/sms', function(req, res) {
           if(!err) {
             broadcast(from, body);
             var twiml_resp = new twilio.TwimlResponse();
-            twiml_resp.message('Thanks for the update.');
+            twiml_resp.message('Got it.');
             console.log(twiml_resp.toString());
             res.send(twiml_resp.toString());                
           } else {
