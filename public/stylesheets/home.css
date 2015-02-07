@@ -1,0 +1,33 @@
+html {
+  background-color: #000000;
+  background-image: url(../images/home-background.png);
+  background-repeat: repeat;
+  background-position: top center;
+}
+body {
+  padding-left: 0;
+  padding-right: 0;
+  background: transparent;
+}
+.container {
+  margin-bottom: 60px;
+  margin-top: 30px;
+}
+.container .row-fluid .span6 div.div-1 {
+  margin: 0px 20px 60px 0px;
+}
+.container .row-fluid .span6 .div-1 .page-header {
+  padding: 0px;
+  margin: 0px;
+}
+.container .row-fluid .span6 .div-1 .page-header h1 {
+  font-weight: normal;
+  font-size: 42px;
+  color: #ffffff;
+}
+.container .row-fluid .span6 .div-1 p {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 25px;
+  color: #ffffff;
+}
